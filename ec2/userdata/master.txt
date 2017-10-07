@@ -1,0 +1,50 @@
+#!/bin/bash
+
+yum install -y nfs-utils
+mkdir /shared
+mount -t nfs4 -o nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2 fs-98ac0231.efs.us-west-2.amazonaws.com:/ /shared
+
+wget -O /home/ec2-user/install.tar https://s3-us-west-2.amazonaws.com/jyang1-perfportal/install.tar
+cd /home/ec2-user
+
+tar xvf install.tar
+cd to_delete_after_install
+./install.sh -d /home/ec2-user/perfPortal -u n -a y
+cd /home/ec2-user
+chown -R ec2-user:ec2-user perfPortal
+cd /home/ec2-user/perfPortal
+mv auto /shared
+ln -s /shared/auto/ auto
+cd auto
+mv project/ /shared/
+ln -s /shared/project project
+
+# --------------------------------------------------------------------
+# build scritp auto.sh which starts glassfish and deploy perfPortal
+
+cat > /home/ec2-user/perfPortal/auto.sh << 'EOF'
+cd /home/ec2-user/perfPortal
+. ./env.properties
+
+# start glassfish
+$glassfish_dir/bin/asadmin start-domain
+
+# deploy perfPortal
+$glassfish_dir/bin/asadmin create-system-properties base_dir=$base_dir
+$glassfish_dir/bin/asadmin create-system-properties jmeter_dir=$jmeter_dir
+$glassfish_dir/bin/asadmin create-system-properties auto_dir=$auto_dir
+$glassfish_dir/bin/asadmin create-system-properties artifact_dir=$artifact_dir
+$glassfish_dir/bin/asadmin create-system-properties glassfish_dir=$glassfish_dir
+$glassfish_dir/bin/asadmin deploy $artifact_dir/jmeterUI.war
+
+EOF
+# --------------------------------------------------------------------
+
+# start glassfish
+
+chown ec2-user:ec2-user /home/ec2-user/perfPortal/auto.sh
+chmod 755 /home/ec2-user/perfPortal/auto.sh
+
+sudo -u ec2-user  /home/ec2-user/perfPortal/auto.sh
+
+

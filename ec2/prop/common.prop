@@ -1,0 +1,31 @@
+# ------------------------
+# general info
+# ------------------------
+
+profile=perfPortal
+#profile=jyang4900
+
+# ------------------------
+# instance info
+# ------------------------
+
+imageId=ami-aa5ebdd2
+instanceType=t2.micro
+#instanceType=m4.xlarge
+#keyName=jyang4900
+keyName=perfPortal
+
+# detailed monitoring
+isEnabled=false
+
+count=1
+
+# ------------------------
+# network info
+# ------------------------
+
+subnetId=subnet-8f4b9dc7
+sgId=sg-860efdfb
+sgIdEFS=sg-7c2e9c01
+publicIp="associate-public-ip-address"
+#publicIp="no-associate-public-ip-address"

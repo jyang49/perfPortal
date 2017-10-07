@@ -1,0 +1,12 @@
+#!/bin/bash
+
+yum install -y nfs-utils
+mkdir /shared
+mount -t nfs4 -o nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2 fs-98ac0231.efs.us-west-2.amazonaws.com:/ /shared
+
+wget -O /home/ec2-user/install.tar https://s3-us-west-2.amazonaws.com/jyang1-perfportal/install.tar
+cd /home/ec2-user
+
+tar xvf install.tar
+cd to_delete_after_install
+./install.sh -d /home/ec2-user/perfPortal -u y -n /shared -a y

@@ -1,0 +1,4 @@
+#!/bin/bash
+
+echo "testing userdata" > /tmp/myfile.txt
+date >> /tmp/myfile.txt
