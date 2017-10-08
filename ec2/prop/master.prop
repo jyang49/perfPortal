@@ -2,5 +2,5 @@
 # agent specific data
 # ------------------------
 
-userdata=master.txt
+#userdata=master.txt
 perfPortalType=master

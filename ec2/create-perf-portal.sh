@@ -38,7 +38,8 @@ fi
 . prop/${type}.prop
 . prop/common.prop
 
-# eval sed 's/TAG_NAME/$ec2Name/' userdata.template > tmp/userdata
+eval sed 's/_TYPE_/$type/' userdata/template.txt > userdata/tmp/userdata.tmp
+eval sed 's/_TAG_NAME_/$ec2Name/' userdata/tmp/userdata.tmp > userdata/tmp/userdata.txt
 
 ec2Id=$(
   aws ec2 run-instances \
@@ -47,7 +48,7 @@ ec2Id=$(
     --key-name $keyName \
     --monitoring Enabled=$isEnabled \
     --count $count \
-    --user-data file://userdata/$userdata \
+    --user-data file://userdata/tmp/userdata.txt \
     --subnet-id $subnetId \
     --security-group-ids $sgId $sgIdEFS \
     --$publicIp \
