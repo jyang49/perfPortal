@@ -37,6 +37,20 @@ $glassfish_dir/bin/asadmin create-system-properties artifact_dir=$artifact_dir
 $glassfish_dir/bin/asadmin create-system-properties glassfish_dir=$glassfish_dir
 $glassfish_dir/bin/asadmin deploy $artifact_dir/jmeterUI.war
 
+# deploy sample servlet
+$glassfish_dir/bin/asadmin deploy $artifact_dir/simpleServlet.war
+
+# start jmeter daemon
+$auto_dir/bin/start-jmeter-daemon.sh $jmeter_dir
+
+# add master to master.properties
+publicIP=`curl http://169.254.169.254/latest/meta-data/public-ipv4`
+hostname=`hostname`
+
+echo "agentList=$hostname" > /home/ec2-user/perfPortal/auto/agent/master.properties
+echo "${hostname}.ip=$publicIP" >> /home/ec2-user/perfPortal/auto/agent/master.properties
+echo "${hostname}.name=master" >> /home/ec2-user/perfPortal/auto/agent/master.properties
+
 EOF
 # --------------------------------------------------------------------
 
@@ -46,5 +60,3 @@ chown ec2-user:ec2-user /home/ec2-user/perfPortal/auto.sh
 chmod 755 /home/ec2-user/perfPortal/auto.sh
 
 sudo -u ec2-user  /home/ec2-user/perfPortal/auto.sh
-
-

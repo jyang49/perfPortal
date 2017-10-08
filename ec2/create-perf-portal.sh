@@ -51,6 +51,7 @@ ec2Id=$(
     --subnet-id $subnetId \
     --security-group-ids $sgId $sgIdEFS \
     --$publicIp \
+    --tag-specifications 'ResourceType=instance,Tags=[{Key=perfPortalType,Value=$perfPortalType}]' \
     --profile $profile \
     --query Instances[].InstanceId \
     --output text
